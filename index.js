@@ -1,5 +1,4 @@
 import fs from "fs";
-import path from "path";
 import inquirer from "inquirer";
 
 
@@ -21,28 +20,37 @@ const questions = [
 inquirer
     .prompt(questions)
     .then((answers) => {
-        answers = [title, description, installation, usage, contribution, test, license, github, email];
+        const { title, description, installation, usage, contribution, test, license, github, email } = answers;
+        writeToFile(`README.md`, answers);
+        // answers = [title, description, installation, usage, contribution, test, license, github, email];
     });
-
-    const title = process.argv[2];
-    const description = process.argv[3];
-    const installation = process.argv[4];
-    const usage = process.argv[5];
-    const contribution = process.argv[6];
-    const test = process.argv[7];
-    const license = process.argv[8];
-    const github = process.argv[9];
-    const email = process.argv[10];
 
 
 // function to write README file
-function writeToFile(fileName, data) {
+function writeToFile(fileName, answers) {
 
-    fileName = "README.md";
-    data =
-        `# ${title}
+    let licenseBadge = ``;
+
+    switch (answers.license) {
+
+        case `MIT`: licenseBadge = `[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)`
+            break;
+
+        case `apache`: licenseBadge = `[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)`
+            break;
+
+        case `GPL`: licenseBadge = `[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)`
+            break;
+
+        case `BSD`: licenseBadge = `[![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)`
+
+        default: licenseBadge = ``
+    }
+
+    let data =
+        `# ${answers.title}
     ## Description
-    ${description}
+    ${answers.description}
     ## Table of Contents
     * [Installation](#installation)
     * [Usage](#usage)
@@ -51,17 +59,18 @@ function writeToFile(fileName, data) {
     * [Tests](#tests)
     * [Questions](#questions)
     ## Installation
-    ${installation}
+    ${answers.installation}
     ## Usage
-    ${usage}
+    ${answers.usage}
     ## License
-    ${license}
+    ${answers.license} ${licenseBadge}
     ## Contributing
-    ${contribution}
+    ${answers.contribution}
     ## Tests
-    ${test}
+    ${answers.test}
     ## Questions
-    If you have any questions, please contact me at ${email}. You can find more of my work at [${github}]`;
+    If you have any questions, please contact me at ${answers.email}.
+    You can find more of my work at [${answers.github}]`;
 
 
     fs.writeFile(fileName, data, (err) =>
