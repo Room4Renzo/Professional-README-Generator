@@ -1,9 +1,6 @@
 import fs from "fs";
 import inquirer from "inquirer";
 
-
-
-
 // array of questions for user
 const questions = [
     { type: "input", name: "title", message: "What is the title of your project?" },
@@ -22,7 +19,6 @@ inquirer
     .then((answers) => {
         const { title, description, installation, usage, contribution, test, license, github, email } = answers;
         writeToFile(`README.md`, answers);
-        // answers = [title, description, installation, usage, contribution, test, license, github, email];
     });
 
 
@@ -77,14 +73,4 @@ function writeToFile(fileName, answers) {
         err ? console.error(err) : console.log('Success!')
     );
 
-
-
 };
-
-// function to initialize program
-function init() {
-
-};
-
-// function call to initialize program
-init();
